@@ -1,10 +1,19 @@
+
 <template>
-  <div>Admin Dashboard</div>
+  <div>
+    <Navbar />
+    <div>
+      <router-view />
+    </div>
+  </div>
 </template>
 
 <script>
-export default {};
+// import { useAdminStore } from '../store';
+// import Navbar from '../../components/NavBar.vue';
+
+
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 </style>

@@ -50,11 +50,11 @@
               Mission
             </router-link>
           </li>
-          <li v-if="user.admin == 'true'">
-            <router-link to="/admin" class="nav-link" aria-current="page">
-              Admin {{ user.admin }}
-            </router-link>
-          </li>
+          <li v-if="user.admin === 'true'">
+    <router-link to="/admin" class="nav-link" aria-current="page">
+      Admin
+    </router-link>
+  </li>
         </ul>
 
         <ul class="navbar-nav mb-2 mb-lg-0">
@@ -75,6 +75,23 @@
                 >
               </li>
               <li><hr class="dropdown-divider" /></li>
+              <template v-if="user.admin === 'true'">
+              <li>
+                <router-link :to="{ name: 'admin-advices' }" class="dropdown-item">
+                  Advices
+                </router-link>
+              </li>
+              <li>
+                <router-link :to="{ name: 'admin-pets' }" class="dropdown-item">
+                  Pets
+                </router-link>
+              </li>
+              <li>
+                <router-link :to="{ name: 'admin-users' }" class="dropdown-item">
+                  Users
+                </router-link>
+              </li>
+              </template>
               <li>
                 <button @click="logout" class="dropdown-item btn btn-danger">
                   Logout

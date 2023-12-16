@@ -41,30 +41,49 @@ const router = createRouter({
     },
     {
       path: "/admin",
-      component: () => import("../views/admin/Dashboard.vue"), // Update with your admin component
-      meta: { requiresAuth: true }, // Add meta field for authentication
+      component: () => import("../views/admin/Dashboard.vue"),
+      meta: { requiresAuth: true, requiresAdmin: true },
       children: [
         {
-          path: "",
+          path: "", // Default child route (e.g., /admin)
           name: "admin",
-          component: () => import("../views/admin/Dashboard.vue"), // Update with your AdminHome component
+          component: () => import("../views/admin/Dashboard.vue"),
         },
         {
-          path: "advices",
-          name: "advices",
-          component: () => import("../views/admin/Advices.vue"), // Update with your Advices component
+          path: "advices", // /admin/advices
+          name: "admin-advices",
+          component: () => import("../views/admin/Advices.vue"),
         },
         {
-          path: "pets",
-          name: "pets",
-          component: () => import("../views/admin/Pets.vue"), // Update with your Pets component
+          path: "pets", // /admin/pets
+          name: "admin-pets",
+          component: () => import("../views/admin/Pets.vue"),
         },
         {
-          path: "users",
-          name: "users",
-          component: () => import("../views/admin/Users.vue"), // Update with your Users component
+          path: "users", // /admin/users
+          name: "admin-users",
+          component: () => import("../views/admin/users/Users.vue"),
         },
-        // Add more admin views as needed
+        {
+          path: "users/:id",
+          component: () => import("../views/admin/users/UserDetail.vue"),
+          name: "admin-user-detail",
+        },
+        {
+          path: "users/create",
+          component: () => import("../views/admin/users/UserForm.vue"),
+          name: "admin-user-create",
+        },
+        {
+          path: "users/:id/edit",
+          component: () => import("../views/admin/users/UserForm.vue"),
+          name: "admin-user-edit",
+        },
+        {
+          path: "users/:id/delete",
+          component: () => import("../views/admin/users/UserDelete.vue"),
+          name: "admin-user-delete",
+        },
       ],
     },
   ],
@@ -73,11 +92,23 @@ const router = createRouter({
 router.beforeResolve(async (to, from, next) => {
   const authStore = useAuthStore();
 
+  console.log('to.meta.requiresAuth:', to.meta.requiresAuth);
+  console.log('to.meta.requiresAdmin:', to.meta.requiresAdmin);
+  console.log('authStore.isAuthenticated:', authStore.isAuthenticated);
+  console.log('authStore.isAdmin:', authStore.isAdmin);
+
+
   if (to.meta.requiresAuth && !authStore.isAuthenticated) {
+    console.log('Requires authentication, redirecting to login');
     return next({ name: "login", query: { redirect: to.fullPath } });
   } else if (to.meta.requiresGuest && authStore.isAuthenticated) {
+    console.log('Requires guest, redirecting to home');
     return next({ name: "home" });
+  } else if (to.meta.requiresAuth && to.meta.requiresAdmin && !authStore.isAdmin) {
+    console.log('Requires authentication and admin, but user is not admin, redirecting to home');
+    return next({ name: "admin" });
   } else {
+    console.log('Proceeding to the route');
     return next();
   }
 });

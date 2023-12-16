@@ -13,6 +13,8 @@ export const useAuthStore = defineStore("auth", {
   getters: {
     userDetail: (state) => state.user,
     isAuthenticated: (state) => (state.accessToken ? true : false),
+    //isAdmin: (state) => state.user?.role === "admin", // Check if the user is an admin
+    isAdmin: (state) => (state.user && state.user.admin === 'true')
   },
 
   actions: {
@@ -43,10 +45,8 @@ export const useAuthStore = defineStore("auth", {
         return data;
       } catch (error) {
         if (error.response && error.response.status === 409) {
-          // Handle conflict error (username or email already taken)
           throw new Error("Username or email is already taken. Please choose another one.");
         } else {
-          // Handle other errors
           throw new Error("Registration failed. Please try again later.");
         }
       }
@@ -80,6 +80,59 @@ export const useAuthStore = defineStore("auth", {
         return data;
       } catch (error) {
         throw error.message;
+      }
+    },
+  },
+});
+
+export const useUsersStore = defineStore("users", {
+  state: () => ({
+    userList: [],
+    selectedUser: null,
+  }),
+
+  actions: {
+    async fetchUsers() {
+      try {
+        const { data } = await useApiPrivate().get('/users'); // Adjust the API endpoint
+        this.userList = data;
+        console.log('data: ', data);
+      } catch (error) {
+        console.error('Error fetching users:', error.message);
+        throw error; // Propagate the error to the calling component
+      }
+    },
+
+    async createUser(userData) {
+      try {
+        const { data } = await useApiPrivate().post('/api/users', userData); // Adjust the API endpoint
+        this.userList.push(data); // Update state with the newly created user
+      } catch (error) {
+        console.error('Error creating user:', error.message);
+        throw error;
+      }
+    },
+
+    async updateUser(userId, userData) {
+      try {
+        const { data } = await useApiPrivate().patch(`/api/users/${userId}`, userData); // Adjust the API endpoint
+        const index = this.userList.findIndex(user => user.id === userId);
+        if (index !== -1) {
+          this.userList[index] = data; // Update state with the modified user
+        }
+      } catch (error) {
+        console.error('Error updating user:', error.message);
+        throw error;
+      }
+    },
+
+    async deleteUser(userId) {
+      try {
+        await useApiPrivate().delete(`/api/users/${userId}`); // Adjust the API endpoint
+        this.userList = this.userList.filter(user => user.id !== userId); // Update state by removing the deleted user
+      } catch (error) {
+        console.error('Error deleting user:', error.message);
+        throw error;
       }
     },
   },

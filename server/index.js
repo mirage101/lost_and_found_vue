@@ -15,6 +15,7 @@ const advicesController = require('./controllers/advicesController');
 const missionController = require('./controllers/missionController');
 const faqsController = require('./controllers/faqController');
 const petsController = require('./controllers/petsController');
+const usersController = require('./controllers/userController');
 
 
 
@@ -76,6 +77,7 @@ app.use('/advices', advicesController);
 app.use('/mission', missionController);
 app.use('/faqs', faqsController);
 app.use('/pets', petsController);
+app.use('/users', usersController);
 
 app.all("*", (req, res) => {
   res.status(404);
