@@ -50,6 +50,11 @@
               Mission
             </router-link>
           </li>
+          <li v-if="user.admin == 'true'">
+            <router-link to="/admin" class="nav-link" aria-current="page">
+              Admin {{ user.admin }}
+            </router-link>
+          </li>
         </ul>
 
         <ul class="navbar-nav mb-2 mb-lg-0">

@@ -18,7 +18,7 @@
               Full Name: {{ user.full_name }}
             </h6>
             <h6 class="card-subtitle mb-2 text-muted">
-              Role: {{ user.admin }}
+              Admin: {{ user.admin ? "yes" : "no" }}
             </h6>
           </div>
         </template>

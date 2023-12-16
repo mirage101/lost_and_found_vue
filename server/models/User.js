@@ -35,7 +35,6 @@ const UserSchema = Schema(
     },
     admin: {
       type: String,
-      required: true,
     },
     refresh_token: String,
   },

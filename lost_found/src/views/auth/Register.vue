@@ -102,14 +102,29 @@ const errorMessage = ref("");
 
 async function submit() {
   console.log(registerData);
-  await authStore
-    .register(registerData)
-    .then((res) => {
-      router.replace({ name: "home" });
-    })
-    .catch((err) => {
-      errorMessage.value = err.message;
+  try {
+    // Register the user
+    await authStore.register(registerData);
+
+    // Log in the user with the same credentials
+    await authStore.login({
+      email: registerData.email,
+      password: registerData.password,
     });
+
+    // Redirect to the home page after successful registration and login
+    router.replace({ name: "home" });
+  } catch (err) {
+    errorMessage.value = err.message;
+  }
+  // await authStore
+  //   .register(registerData)
+  //   .then((res) => {
+  //     router.replace({ name: "home" });
+  //   })
+  //   .catch((err) => {
+  //     errorMessage.value = err.message;
+  //   });
 }
 </script>
   

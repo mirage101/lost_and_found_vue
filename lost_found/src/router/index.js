@@ -39,6 +39,34 @@ const router = createRouter({
       component: () => import("../views/auth/User.vue"),
       meta: { requiresAuth: true },
     },
+    {
+      path: "/admin",
+      component: () => import("../views/admin/Dashboard.vue"), // Update with your admin component
+      meta: { requiresAuth: true }, // Add meta field for authentication
+      children: [
+        {
+          path: "",
+          name: "admin",
+          component: () => import("../views/admin/Dashboard.vue"), // Update with your AdminHome component
+        },
+        {
+          path: "advices",
+          name: "advices",
+          component: () => import("../views/admin/Advices.vue"), // Update with your Advices component
+        },
+        {
+          path: "pets",
+          name: "pets",
+          component: () => import("../views/admin/Pets.vue"), // Update with your Pets component
+        },
+        {
+          path: "users",
+          name: "users",
+          component: () => import("../views/admin/Users.vue"), // Update with your Users component
+        },
+        // Add more admin views as needed
+      ],
+    },
   ],
 });
 

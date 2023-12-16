@@ -11,6 +11,13 @@ const credentials = require("./middleware/credentials");
 const errorHandlerMiddleware = require("./middleware/error_handler");
 const authenticationMiddleware = require("./middleware/authentication");
 
+const advicesController = require('./controllers/advicesController');
+const missionController = require('./controllers/missionController');
+const faqsController = require('./controllers/faqController');
+const petsController = require('./controllers/petsController');
+
+
+
 const app = express();
 const PORT = 3500;
 
@@ -20,21 +27,37 @@ connectDB();
 app.use(credentials);
 
 // CORS
-//app.use(cors(corsOptions));
-app.use(
-  cors({
-    origin: "http://localhost:5174",
-    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-    credentials: true,
-    optionsSuccessStatus: 204,
-    allowedHeaders: "Content-Type,Authorization",
-  })
-);
+app.use(cors(corsOptions));
+// app.use(
+//   cors({
+//     origin: "http://localhost:5174",
+//     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+//     credentials: true,
+//     optionsSuccessStatus: 204,
+//     allowedHeaders: "Content-Type,Authorization",
+//   })
+// );
+
+
+app.get("/vets", async (req, res) => {
+  try {
+    const response = await axios.get(
+      `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${req.query.lat},${req.query.lng}&radius=5000&type=veterinary_care&key=AIzaSyDAvZaaV15EizIjZYsTA1v6p1PczPIGbHs`
+    );
+    console.log(response.data);
+    res.json(response.data);
+  } catch (error) {
+    res.status(500).json({ error: "Error fetching data from Google Places API" });
+  }
+});
+
 // application.x-www-form-urlencoded
 app.use(express.urlencoded({ extended: false }));
 
 // application/json response
 app.use(express.json());
+
+
 
 // middleware for cookies
 app.use(cookieParser());
@@ -49,6 +72,10 @@ app.use(errorHandlerMiddleware);
 
 // Routes
 app.use("/api/auth", require("./routes/api/auth"));
+app.use('/advices', advicesController);
+app.use('/mission', missionController);
+app.use('/faqs', faqsController);
+app.use('/pets', petsController);
 
 app.all("*", (req, res) => {
   res.status(404);
