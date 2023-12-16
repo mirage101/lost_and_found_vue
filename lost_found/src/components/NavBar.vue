@@ -87,6 +87,16 @@
                 </router-link>
               </li>
               <li>
+                <router-link :to="{ name: 'admin-mission' }" class="dropdown-item">
+                  Mission
+                </router-link>
+              </li>
+              <li>
+                <router-link :to="{ name: 'admin-faqs' }" class="dropdown-item">
+                  Faqs
+                </router-link>
+              </li>
+              <li>
                 <router-link :to="{ name: 'admin-users' }" class="dropdown-item">
                   Users
                 </router-link>

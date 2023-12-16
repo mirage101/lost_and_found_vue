@@ -68,21 +68,45 @@ const router = createRouter({
           path: "users/:id",
           component: () => import("../views/admin/users/UserDetail.vue"),
           name: "admin-user-detail",
+          props: true
         },
         {
-          path: "users/create",
-          component: () => import("../views/admin/users/UserForm.vue"),
-          name: "admin-user-create",
+          path: "users/create", // /admin/users
+          name: "admin-create-user",
+          component: () => import("../views/admin/users/UserCreate.vue"),
         },
         {
-          path: "users/:id/edit",
-          component: () => import("../views/admin/users/UserForm.vue"),
-          name: "admin-user-edit",
+          path: "advices", // /admin/users
+          name: "admin-advices",
+          component: () => import("../views/admin/advices/Advices.vue"),
         },
         {
-          path: "users/:id/delete",
-          component: () => import("../views/admin/users/UserDelete.vue"),
-          name: "admin-user-delete",
+          path: "advices/:id",
+          component: () => import("../views/admin/advices/AdviceDetails.vue"),
+          name: "admin-advices-detail",
+          props: true
+        },
+        {
+          path: "faqs", // /admin/users
+          name: "admin-faqs",
+          component: () => import("../views/admin/faq/Faqs.vue"),
+        },
+        {
+          path: "faqs/:id",
+          component: () => import("../views/admin/faq/FaqDetails.vue"),
+          name: "admin-faqs-detail",
+          props: true
+        },
+        {
+          path: "mission", // /admin/users
+          name: "admin-mission",
+          component: () => import("../views/admin/mission/Mission.vue"),
+        },
+        {
+          path: "mission/:id",
+          component: () => import("../views/admin/mission/MissionDetails.vue"),
+          name: "admin-mission-detail",
+          props: true
         },
       ],
     },
@@ -112,5 +136,7 @@ router.beforeResolve(async (to, from, next) => {
     return next();
   }
 });
+
+
 
 export default router;
